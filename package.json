@@ -19,6 +19,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
     "sass": "^1.32.8",
+    "superagent": "^6.1.0",
     "typeface-quicksand": "^1.1.13",
     "web-vitals": "^1.0.1"
   },
