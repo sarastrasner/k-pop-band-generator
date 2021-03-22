@@ -1,6 +1,41 @@
+@import 'components/variables';
 @import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/dist/css/bootstrap.css';
 
-body {
-  background-color: lightsalmon;
-  padding: 3%;
+#logoBox {
+  width: 100%;
+  background: $navy;
+  margin-bottom: 10px;
+}
+
+* {
+  font-family: 'Quicksand';
+}
+
+#logo {
+  height: 140px;
+}
+
+#footer {
+  width: 100%;
+  color: $light-yellow;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: $navy;
+  font-family: 'Quicksand';
+  font-weight: 500;
+  a:link,
+  a:visited {
+    text-decoration: none;
+    color: $light-yellow;
+  }
+  a:hover,
+  a:active {
+    color: $dark-orange;
+  }
 }
