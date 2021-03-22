@@ -6,6 +6,15 @@
   padding: 3%;
 }
 
+#card-container{
+  display: grid;
+}
+
 .title{
   font-weight: 700;
+}
+
+.individualCards{
+  min-width: "20%";
+  flex-grow: 0;
 }
