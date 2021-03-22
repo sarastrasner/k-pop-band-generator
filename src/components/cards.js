@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import CardDeck from 'react-bootstrap/CardDeck';
 import { connect } from 'react-redux';
-import { get } from '../store/store';
+import { get, updateShowCustomizer } from '../store/store';
 import './cards.scss';
+import Customizer from './customizer';
 
-const mapDispatchToProps = { get };
+const mapDispatchToProps = { get, updateShowCustomizer };
 
 function Cards(props) {
-  //const [customBand, setCustomBand] = useState([]);
+  const [customBand, setCustomBand] = useState([]);
+  //const [showCustomizer, setShowCustomizer] = useState(false);
+  console.log('Show customizer?', props.stars.kPop.showCustomizer);
+
   //console.log(props.stars.kPop.results[0].members[0].photo);
   useEffect(() => {
     props.get();
+    setCustomBand([props.stars.kPop.results]);
     // eslint-disable-next-line
   }, []);
 
@@ -20,18 +26,31 @@ function Cards(props) {
     console.log('You clicked the button!');
   };
 
+  const renderCustomizer = () => {
+    props.updateShowCustomizer();
+    //console.log('You want to customize?', props.stars.kPop.showCustomizer);
+  };
+
   return (
     <>
-      {/* {props.stars.kPop.results
-        ? props.stars.kPop.results.map((band, idx) => (
+      <ButtonGroup aria-label="Basic example">
+        <Button className="button" onClick={() => handleClick()}>
+          Give Me a Random Band
+        </Button>
+        <Button className="button" onClick={() => renderCustomizer()}>
+          Customize My Band
+        </Button>
+      </ButtonGroup>
+      {props.stars.kPop.showCustomizer ? <Customizer /> : ''}
+
+      {/* {customBand.length > 0
+        ? customBand[0].map((person, idx) => (
             <div key={idx}>
-              <h3>{band.name}</h3>
+              <p>{person.name}</p>
+              <p>{person.id}</p>
             </div>
           ))
         : ''} */}
-      <Button 
-      className="button"
-      onClick={() => handleClick()}>Give me a band</Button>
       <CardDeck>
         <Card>
           <Card.Img
