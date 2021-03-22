@@ -46,27 +46,35 @@ function Cards(props) {
       </ButtonGroup>
       {props.stars.kPop.showCustomizer ? <Customizer /> : ''}
       <CardDeck>
-        {results
-          ? results.map((person, idx) => (
-              <Card className="individialCards" key={idx}>
-                <Card.Img
-                  variant="top"
-                  //src={props.stars.kPop.results[0].members[0].photo}
-                />
-                <Card.Title className="title">{person.name}</Card.Title>
-                <Card.Body>
-                  <Card.Text>
-                    This is a wider card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
-                  </Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <small className="text-muted">Last updated 3 mins ago</small>
-                </Card.Footer>
-              </Card>
-            ))
-          : ''}
+        <div class="container">
+          <div class="row row-cols-4">
+            {results
+              ? results.map((person, idx) => (
+                  <div class="col">
+                    <Card className="individialCards" key={idx}>
+                      <Card.Img
+                        variant="top"
+                        //src={props.stars.kPop.results[0].members[0].photo}
+                      />
+                      <Card.Title className="title">{person.name}</Card.Title>
+                      <Card.Body>
+                        <Card.Text>
+                          This is a wider card with supporting text below as a
+                          natural lead-in to additional content. This content is
+                          a little bit longer.
+                        </Card.Text>
+                      </Card.Body>
+                      <Card.Footer>
+                        <small className="text-muted">
+                          Last updated 3 mins ago
+                        </small>
+                      </Card.Footer>
+                    </Card>
+                  </div>
+                ))
+              : ''}
+          </div>
+        </div>
       </CardDeck>
     </div>
   );
