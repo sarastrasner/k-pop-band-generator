@@ -1,4 +1,4 @@
-.button{
+.button {
   margin-bottom: 15px;
 }
 
@@ -6,15 +6,19 @@
   padding: 3%;
 }
 
-#card-container{
+#card-container {
   display: grid;
 }
 
-.title{
+.card-deck {
+  width: 100%;
+}
+
+.title {
   font-weight: 700;
 }
 
-.individualCards{
-  min-width: "20%";
+.individualCards {
+  min-width: '20%';
   flex-grow: 0;
 }
