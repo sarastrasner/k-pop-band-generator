@@ -45,12 +45,12 @@ function Cards(props) {
         </Button>
       </ButtonGroup>
       {props.stars.kPop.showCustomizer ? <Customizer /> : ''}
-      <CardDeck>
-        <div class="container">
-          <div class="row row-cols-4">
+      <CardDeck className="card-deck">
+        <div className="container">
+          <div className="row row-cols-4">
             {results
               ? results.map((person, idx) => (
-                  <div class="col">
+                  <div className="col" key={idx}>
                     <Card className="individialCards" key={idx}>
                       <Card.Img
                         variant="top"
