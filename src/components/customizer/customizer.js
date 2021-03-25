@@ -17,6 +17,7 @@ const mapDispatchToProps = {
 };
 
 function Customizer(props) {
+  let bandArray = [{name:'Blackpink'}, {name:"BTS"}, {name: 'Red Velvet'}, {name:'TWICE'}];
   console.log(props);
   const [selectedBands, updateSelectedBands] = useState([]);
   const [genderPreference, updateGenderPreference] = useState('');
@@ -55,20 +56,18 @@ function Customizer(props) {
           <Col xs={3}>
             <Form.Group>
               <Form.Label>Only include members from these bands:</Form.Label>
-              {props.stars.kPop.results.length > 0
-                ? props.stars.kPop.results.map((band, idx) => (
-                    <div key={idx} className="mb-3">
-                      <Form.Check
-                        inline
-                        custom
-                        label={band.name}
-                        onBlur={e => handleCheck(e)}
-                        type="checkbox"
-                        id={band.name}
-                      />
-                    </div>
-                  ))
-                : ''}
+              {bandArray.map((band, idx) => (
+                <div key={idx} className="mb-3">
+                  <Form.Check
+                    inline
+                    custom
+                    label={band.name}
+                    onBlur={e => handleCheck(e)}
+                    type="checkbox"
+                    id={band.name}
+                  />
+                </div>
+              ))}
             </Form.Group>
           </Col>
           <Col xs={3}>
