@@ -1,29 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React  from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ListGroup from 'react-bootstrap/ListGroup';
 import CardDeck from 'react-bootstrap/CardDeck';
 import { connect } from 'react-redux';
-import { get, updateShowCustomizer } from '../../store/store';
+import { updateShowCustomizer } from '../../store/store';
 import './cards.scss';
 import Customizer from '../customizer/customizer';
-const mapDispatchToProps = { get, updateShowCustomizer };
+import { useQuery } from 'graphql-hooks';
+import placeholder from '../../assets/placeholder.jpeg';
+
+const mapDispatchToProps = { updateShowCustomizer };
 
 function Cards(props) {
-  const [customBand, setCustomBand] = useState([]);
-  let results = props.stars.kPop.results;
-  console.log('What is this????', props.stars.kPop.results);
-  console.log("Here's your band!", customBand);
+  console.log('props.stars',props.stars.preferredQTY);
 
-  useEffect(() => {
-    props.get();
-    setCustomBand([props.stars.kPop.results]);
-    // eslint-disable-next-line
-  }, []);
+  const CUSTOM_QUERY = `query{
+    performersCustom (limit:${props.stars.preferredQTY}) {
+      name
+      gender
+      group
+      photo
+      specialty
+      bio
+    }
+  }
+  `;
+
+  const { loading, error, data } = useQuery(CUSTOM_QUERY);
+
+  if (loading) return 'Loading...';
+  if (error) return 'Something Bad Happened';
+
+  console.log('Data from new thing: ', data);
 
   const handleClick = () => {
     console.log('You clicked the button!');
-    console.log("Here's your band!", customBand);
   };
 
   const renderCustomizer = () => {
@@ -44,30 +57,35 @@ function Cards(props) {
           Customize My Band
         </Button>
       </ButtonGroup>
-      {props.stars.kPop.showCustomizer ? <Customizer /> : ''}
+      {props.stars.showCustomizer ? <Customizer /> : ''}
       <CardDeck className="card-deck">
         <div className="container">
           <div className="row row-cols-4">
-            {results
-              ? results.map((person, idx) => (
+            {data.performersCustom
+              ? data.performersCustom.map((person, idx) => (
                   <div className="col" key={idx}>
                     <Card className="individialCards" key={idx}>
-                      <Card.Img
-                        variant="top"
-                        //src={props.stars.kPop.results[0].members[0].photo}
-                      />
-                      <Card.Title className="title">{person.name}</Card.Title>
+                      {person.photo !== 'no image' ? (
+                        <Card.Img variant="top" src={person.photo} />
+                      ) : (
+                        <Card.Img variant="top" src={placeholder} />
+                      )}
                       <Card.Body>
-                        <Card.Text>
-                          This is a wider card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </Card.Text>
+                        <Card.Title className="title">{person.name}</Card.Title>
+                        <Card.Subtitle className="mb-2 text-muted">
+                          {person.group}
+                        </Card.Subtitle>
+                        <Card.Text>{person.bio}</Card.Text>
                       </Card.Body>
+                      <ListGroup variant="flush">
+                        {person.specialty.map((item, idx) => {
+                          return (
+                            <ListGroup.Item key={idx}>{item}</ListGroup.Item>
+                          );
+                        })}
+                      </ListGroup>
                       <Card.Footer>
-                        <small className="text-muted">
-                          Last updated 3 mins ago
-                        </small>
+                        <small className="text-muted"> </small>
                       </Card.Footer>
                     </Card>
                   </div>
@@ -81,7 +99,7 @@ function Cards(props) {
 }
 
 const mapStateToProps = state => ({
-  stars: state,
+  stars: state.kPop,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cards);
