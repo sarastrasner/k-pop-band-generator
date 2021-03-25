@@ -14,10 +14,11 @@ import placeholder from '../../assets/placeholder.jpeg';
 const mapDispatchToProps = { updateShowCustomizer };
 
 function Cards(props) {
-  console.log('props.stars',props.stars.preferredQTY);
+  console.log('props.stars',props.stars);
+  let {bandPreference, genderPreference, preferredQTY, showCustomizer} = props.stars;
 
   const CUSTOM_QUERY = `query{
-    performersCustom (limit:${props.stars.preferredQTY}) {
+    performersCustom (limit:${preferredQTY}) {
       name
       gender
       group
@@ -57,7 +58,7 @@ function Cards(props) {
           Customize My Band
         </Button>
       </ButtonGroup>
-      {props.stars.showCustomizer ? <Customizer /> : ''}
+      {showCustomizer ? <Customizer /> : ''}
       <CardDeck className="card-deck">
         <div className="container">
           <div className="row row-cols-4">
