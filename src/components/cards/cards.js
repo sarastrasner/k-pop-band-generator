@@ -1,59 +1,39 @@
-import React  from 'react';
+import React, { useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
 import CardDeck from 'react-bootstrap/CardDeck';
 import { connect } from 'react-redux';
-import { updateShowCustomizer } from '../../store/store';
+import { updateShowCustomizer, getNewData } from '../../store/store';
 import './cards.scss';
 import Customizer from '../customizer/customizer';
-import { useQuery } from 'graphql-hooks';
 import placeholder from '../../assets/placeholder.jpeg';
 
-const mapDispatchToProps = { updateShowCustomizer };
+const mapDispatchToProps = { updateShowCustomizer, getNewData };
 
 function Cards(props) {
-  console.log('props.stars',props.stars);
-  let {bandPreference, genderPreference, preferredQTY, showCustomizer} = props.stars;
+  let { customBand, showCustomizer } = props.stars;
 
-  const CUSTOM_QUERY = `query{
-    performersCustom (limit:${preferredQTY}) {
-      name
-      gender
-      group
-      photo
-      specialty
-      bio
-    }
-  }
-  `;
-
-  const { loading, error, data } = useQuery(CUSTOM_QUERY);
-
-  if (loading) return 'Loading...';
-  if (error) return 'Something Bad Happened';
-
-  console.log('Data from new thing: ', data);
-
-  const handleClick = () => {
-    console.log('You clicked the button!');
-  };
-
-  const renderCustomizer = () => {
-    props.updateShowCustomizer();
-  };
+  useEffect(() => {
+    props.getNewData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div id="cards">
       <ButtonGroup aria-label="Basic example">
-        <Button className="button" variant="info" onClick={() => handleClick()}>
+        <Button
+          className="button"
+          variant="info"
+          onClick={() => props.getNewData()}
+        >
           Give Me a Random Band
         </Button>
         <Button
           className="button"
           variant="info"
-          onClick={() => renderCustomizer()}
+          onClick={() => props.updateShowCustomizer()}
         >
           Customize My Band
         </Button>
@@ -62,8 +42,8 @@ function Cards(props) {
       <CardDeck className="card-deck">
         <div className="container">
           <div className="row row-cols-4">
-            {data.performersCustom
-              ? data.performersCustom.map((person, idx) => (
+            {customBand.length > 0
+              ? customBand.map((person, idx) => (
                   <div className="col" key={idx}>
                     <Card className="individialCards" key={idx}>
                       {person.photo !== 'no image' ? (

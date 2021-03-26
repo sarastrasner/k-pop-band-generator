@@ -6,25 +6,30 @@ import Button from 'react-bootstrap/Button';
 import RangeSlider from 'react-bootstrap-range-slider';
 import './customizer.scss';
 import {
+  updateMakeAPICall,
   updateBandPreference,
   updateGenderPreference,
   updateQTYPreference,
 } from '../../store/store';
 const mapDispatchToProps = {
+  updateMakeAPICall,
   updateBandPreference,
   updateGenderPreference,
   updateQTYPreference,
 };
 
 function Customizer(props) {
-  let bandArray = [{name:'Blackpink'}, {name:"BTS"}, {name: 'Red Velvet'}, {name:'TWICE'}];
-  console.log(props);
+  let bandArray = [
+    { name: 'Blackpink' },
+    { name: 'BTS' },
+    { name: 'Red Velvet' },
+    { name: 'TWICE' },
+  ];
   const [selectedBands, updateSelectedBands] = useState([]);
   const [genderPreference, updateGenderPreference] = useState('');
   const [value, setValue] = React.useState(5);
   const [bandQTY, setBandQTY] = useState('');
 
-  //console.log(props.stars.kPop.results[0].members[0].photo);
   console.log(
     `Selected bands: ${selectedBands}, bandQTY: ${bandQTY}, gender preference: ${genderPreference}`
   );
@@ -35,19 +40,18 @@ function Customizer(props) {
     if (selectedBands) props.updateBandPreference(selectedBands);
     if (genderPreference) props.updateGenderPreference(genderPreference);
     if (bandQTY) props.updateQTYPreference(bandQTY);
+    props.updateMakeAPICall();
   };
 
   const handleQTYChange = e => {
     e.preventDefault();
     setValue(e.target.value);
     setBandQTY(e.target.value);
-    console.log(`Give me the id!!!!! ${e.target.value}`);
   };
 
   const handleCheck = e => {
     e.preventDefault();
     updateSelectedBands([...selectedBands, e.target.id]);
-    console.log('You want:', e.target.id);
   };
   return (
     <>
@@ -118,7 +122,7 @@ function Customizer(props) {
 }
 
 const mapStateToProps = state => ({
-  stars: state,
+  stars: state.kPop,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customizer);
