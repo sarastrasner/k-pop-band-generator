@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^4.6.0",
     "fetch": "^1.1.0",
+    "graphql": "^15.5.0",
     "graphql-hooks": "^5.1.1",
     "graphql-request": "^3.4.0",
     "react": "^17.0.1",
