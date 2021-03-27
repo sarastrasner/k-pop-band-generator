@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -11,9 +11,37 @@ const mapDispatchToProps = { getNewData, updateShowCustomizer };
 function Customizer(props) {
   const [selectedBands, updateSelectedBands] = useState([]);
   const [genderPref, updateGenderPref] = useState([]);
-  const [value, setValue] = React.useState(5);
+  const [value, setValue] = React.useState(8);
   const [bandQTY, setBandQTY] = useState('');
+  const [tempArray] = useState([]);
   let { preferredQTY, genderPreference, bandPreference } = props.stars;
+
+  const renderCurrentFilters = () => {
+    return (
+      <p>
+        You are currently filtering for{' '}
+        <strong>
+          {genderPref.length !== 1
+            ? 'all genders'
+            : genderPref[0] === 'male'
+            ? 'only men'
+            : genderPref[0] === 'female'
+            ? 'only women'
+            : null}
+        </strong>
+        ,{' '}
+        <strong>{tempArray.length > 0 ? 'select bands ' : 'all bands '}</strong>
+        and <strong>{value}</strong> members
+      </p>
+    );
+  };
+
+  useEffect(() => {
+    if (genderPref[0] === 'female') {
+      console.log('only girls!');
+    }
+    if (genderPref[0] === 'male') console.log('only boys!');
+  }, [genderPref]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -46,16 +74,64 @@ function Customizer(props) {
 
   const handleCheck = e => {
     e.preventDefault();
-    updateSelectedBands([...selectedBands, e.target.id]);
+    if (!tempArray.includes(e.target.id)) {
+      tempArray.push(e.target.id);
+    } else if (tempArray.includes(e.target.id)) {
+      for (let i = 0; i < tempArray.length; i++) {
+        if (tempArray[i] === e.target.id) {
+          tempArray.splice(i, 1);
+        }
+      }
+    }
+    updateSelectedBands(tempArray);
+    //updateSelectedBands([...selectedBands, e.target.id]);
   };
+
   return (
     <>
       <Form id="form" onSubmit={e => handleSubmit(e)}>
+        <h4>
+          You can customize your results by using any or all of the following
+          filters:
+        </h4>
+        {renderCurrentFilters('meow', 'test', 1)}
         <Form.Row>
+          <Col xs={4}>
+            <Form.Group>
+              <Form.Label>Make my band:{'  '}</Form.Label>
+              <Form.Check
+                name="genderSelect"
+                custom
+                inline
+                label="All Girls"
+                type="radio"
+                id="female"
+                onClick={e => updateGenderPref([e.target.id])}
+              />
+              <Form.Check
+                name="genderSelect"
+                custom
+                inline
+                label="All Boys"
+                type="radio"
+                id="male"
+                onClick={e => updateGenderPref([e.target.id])}
+              />
+              <Form.Check
+                name="genderSelect"
+                custom
+                inline
+                label="Both"
+                type="radio"
+                id="both"
+                onClick={e => updateGenderPref(['male', 'female'])}
+              />
+            </Form.Group>
+          </Col>
           <Col xs={3}>
             <Form.Group>
               <Form.Label>Only include members from these bands:</Form.Label>
-              {props.stars.bandPreference.map((band, idx) => (
+              {bandPreference.map((band, idx) => (
                 <div key={idx} className="mb-3">
                   <Form.Check
                     inline
@@ -67,29 +143,6 @@ function Customizer(props) {
                   />
                 </div>
               ))}
-            </Form.Group>
-          </Col>
-          <Col xs={3}>
-            <Form.Group>
-              <Form.Label>Make my band:{'  '}</Form.Label>
-              <Form.Check
-                name="genderSelect"
-                custom
-                inline
-                label="All Girls"
-                type="radio"
-                id="female"
-                onClick={e => updateGenderPref(e.target.id)}
-              />
-              <Form.Check
-                name="genderSelect"
-                custom
-                inline
-                label="All Boys"
-                type="radio"
-                id="male"
-                onClick={e => updateGenderPref([e.target.id])}
-              />
             </Form.Group>
           </Col>
           <Col xs={3}>

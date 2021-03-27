@@ -18,7 +18,6 @@ import placeholder from '../../assets/placeholder.jpeg';
 const mapDispatchToProps = { updateShowCustomizer, getNewData, generateName };
 
 function Cards(props) {
-  console.log(props);
   let {
     customBand,
     showCustomizer,
