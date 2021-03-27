@@ -10,7 +10,7 @@ function App() {
         <img id="logo" src={logo} alt="logo"></img>
       </div>
       <Cards />
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }

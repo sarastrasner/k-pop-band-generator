@@ -1,22 +1,36 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
 import CardDeck from 'react-bootstrap/CardDeck';
+import Alert from 'react-bootstrap/Alert';
 import { connect } from 'react-redux';
-import { updateShowCustomizer, getNewData } from '../../store/store';
+import {
+  updateShowCustomizer,
+  getNewData,
+  generateName,
+} from '../../store/store';
 import './cards.scss';
 import Customizer from '../customizer/customizer';
 import placeholder from '../../assets/placeholder.jpeg';
 
-const mapDispatchToProps = { updateShowCustomizer, getNewData };
+const mapDispatchToProps = { updateShowCustomizer, getNewData, generateName };
 
 function Cards(props) {
-  let { customBand, showCustomizer } = props.stars;
+  console.log(props);
+  let {
+    customBand,
+    showCustomizer,
+    preferredQTY,
+    genderPreference,
+    bandPreference,
+    bandName,
+  } = props.stars;
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    props.getNewData();
+    props.getNewData(preferredQTY, genderPreference, bandPreference);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -37,8 +51,32 @@ function Cards(props) {
         >
           Customize My Band
         </Button>
+        <Button
+          className="button"
+          variant="info"
+          onClick={() => {
+            setShow(true);
+            props.generateName();
+          }}
+        >
+          Generate a Name for My Band
+        </Button>
       </ButtonGroup>
       {showCustomizer ? <Customizer /> : ''}
+      <Alert
+        show={show}
+        variant="light"
+        onClose={() => setShow(false)}
+        dismissible
+      >
+        <Alert.Heading>
+          Your band name is:
+          <strong> {bandName}</strong>
+        </Alert.Heading>
+        <Button onClick={() => props.generateName()} variant="outline-info">
+          Get a different name
+        </Button>
+      </Alert>
       <CardDeck className="card-deck">
         <div className="container">
           <div className="row row-cols-4">
@@ -71,7 +109,7 @@ function Cards(props) {
                     </Card>
                   </div>
                 ))
-              : ''}
+              : 'Loading...'}
           </div>
         </div>
       </CardDeck>

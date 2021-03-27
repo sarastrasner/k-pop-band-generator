@@ -4,29 +4,50 @@ import { request, gql } from 'graphql-request';
 let initialState = {
   customBand: [],
   showCustomizer: false,
-  bandPreference: [],
-  genderPreference: '',
+  bandPreference: [
+    'Blackpink',
+    'Red Velvet',
+    'BTS',
+    'TWICE',
+    '(G)I-DLE',
+    'Exo',
+  ],
+  genderPreference: ['male', 'female'],
   preferredQTY: 8,
-  makeAPICall: true,
+  bandName:''
 };
 
-const query = gql`
-query{
-  performersCustom (limit:${initialState.preferredQTY}) {
-    name
-    gender
-    group
-    photo
-    specialty
-    bio
-  }
-}
-`;
 
-export const getNewData = () => dispatch => {
-  request('https://k-pop-api-v2.herokuapp.com/graphql', query)
+const query = (limit, gender, bandPreference) => gql`
+  query{
+    performersCustom(
+      gender:${JSON.stringify(gender)},
+      limit:${limit},
+      group:${JSON.stringify(bandPreference)}
+     )
+    {
+    name
+      gender
+      group
+      photo
+      specialty
+      bio
+    }
+  }
+  `;
+
+export const getNewData = (limit, gender, bandPreference) => dispatch => {
+  console.log(
+    'This is being passed to getData: ',
+    limit,
+    gender,
+    bandPreference
+  );
+  request(
+    'https://k-pop-api-v2.herokuapp.com/graphql',
+    query(limit, gender, bandPreference)
+  )
     .then(data => {
-      console.log('You got new data!');
       dispatch(getAction(data));
     })
     .catch(err => console.log(err));
@@ -39,6 +60,13 @@ export const getAction = payload => {
   };
 };
 
+export const generateName = () => {
+  let nameArray = ['Meow', 'Pink', 'Love', 'Heart', 'Puppy', 'Cuddle', 'Glitter', 'Sparkle', 'Glam', 'Squad', 'Glitzy', 'Bubbles', 'Power', 'Queen'];
+  let randomItem = nameArray[Math.floor(Math.random()*nameArray.length)];
+  let randomItem2 = nameArray[Math.floor(Math.random()*nameArray.length)];
+  return { type: 'NAME' , payload:`${randomItem} ${randomItem2}`};
+};
+
 export const updateShowCustomizer = () => {
   return { type: 'CUSTOM' };
 };
@@ -48,17 +76,15 @@ export const updateMakeAPICall = () => {
 };
 
 export const updateBandPreference = preferenceArray => {
-  console.log(`We in da store with dis array: ${preferenceArray}`);
   return { type: 'CUSTOM-BAND-PREFERENCE', payload: preferenceArray };
 };
 
 export const updateQTYPreference = preferredQTY => {
-  console.log(`We in da store with this many: ${preferredQTY}`);
-  return { type: 'CUSTOM-QTY-PREFERENCE', payload: preferredQTY };
+  return { type: 'CUSTOM-QTY-PREFERENCE', payload: +preferredQTY };
 };
 
 export const updateGenderPreference = preference => {
-  console.log(`We in da store with only ${preference}`);
+  console.log(`You are updating gender to: ${preference}`);
   return { type: 'CUSTOM-GENDER-PREFERENCE', payload: preference };
 };
 
@@ -68,7 +94,6 @@ export default (state = initialState, action) => {
     case 'DATA':
       return { ...state, customBand: payload.performersCustom };
     case 'NEED-DATA':
-      console.log(`state.makeAPICall is now ${!state.makeAPICall}`);
       return { ...state, makeAPICall: !state.makeAPICall };
     case 'CUSTOM':
       return { ...state, showCustomizer: !state.showCustomizer };
@@ -78,6 +103,9 @@ export default (state = initialState, action) => {
       return { ...state, genderPreference: payload };
     case 'CUSTOM-QTY-PREFERENCE':
       return { ...state, preferredQTY: payload };
+      case 'NAME':
+        console.log('name payload: ',payload)
+        return { ...state, bandName: payload };
     default:
       return state;
   }

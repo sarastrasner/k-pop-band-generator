@@ -5,42 +5,37 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import RangeSlider from 'react-bootstrap-range-slider';
 import './customizer.scss';
-import {
-  updateMakeAPICall,
-  updateBandPreference,
-  updateGenderPreference,
-  updateQTYPreference,
-} from '../../store/store';
-const mapDispatchToProps = {
-  updateMakeAPICall,
-  updateBandPreference,
-  updateGenderPreference,
-  updateQTYPreference,
-};
+import { getNewData, updateShowCustomizer } from '../../store/store';
+const mapDispatchToProps = { getNewData, updateShowCustomizer };
 
 function Customizer(props) {
-  let bandArray = [
-    { name: 'Blackpink' },
-    { name: 'BTS' },
-    { name: 'Red Velvet' },
-    { name: 'TWICE' },
-  ];
   const [selectedBands, updateSelectedBands] = useState([]);
-  const [genderPreference, updateGenderPreference] = useState('');
+  const [genderPref, updateGenderPref] = useState([]);
   const [value, setValue] = React.useState(5);
   const [bandQTY, setBandQTY] = useState('');
-
-  console.log(
-    `Selected bands: ${selectedBands}, bandQTY: ${bandQTY}, gender preference: ${genderPreference}`
-  );
+  let { preferredQTY, genderPreference, bandPreference } = props.stars;
 
   const handleSubmit = e => {
     e.preventDefault();
     e.target.reset();
-    if (selectedBands) props.updateBandPreference(selectedBands);
-    if (genderPreference) props.updateGenderPreference(genderPreference);
-    if (bandQTY) props.updateQTYPreference(bandQTY);
-    props.updateMakeAPICall();
+    if (selectedBands.length > 0) {
+      console.log('Selected bands: ', selectedBands);
+      bandPreference = selectedBands;
+      updateSelectedBands([]);
+    }
+    if (genderPref.length > 0) {
+      console.log('Gender pref: ', genderPref);
+      genderPreference = genderPref;
+      updateGenderPref([]);
+    }
+    if (bandQTY) {
+      console.log('Band QTY: ', bandQTY);
+      preferredQTY = bandQTY;
+      setBandQTY('');
+      setValue(5);
+    }
+    props.getNewData(preferredQTY, genderPreference, bandPreference);
+    props.updateShowCustomizer();
   };
 
   const handleQTYChange = e => {
@@ -60,15 +55,15 @@ function Customizer(props) {
           <Col xs={3}>
             <Form.Group>
               <Form.Label>Only include members from these bands:</Form.Label>
-              {bandArray.map((band, idx) => (
+              {props.stars.bandPreference.map((band, idx) => (
                 <div key={idx} className="mb-3">
                   <Form.Check
                     inline
                     custom
-                    label={band.name}
+                    label={band}
                     onBlur={e => handleCheck(e)}
                     type="checkbox"
-                    id={band.name}
+                    id={band}
                   />
                 </div>
               ))}
@@ -83,8 +78,8 @@ function Customizer(props) {
                 inline
                 label="All Girls"
                 type="radio"
-                id="girls"
-                onClick={e => updateGenderPreference(e.target.id)}
+                id="female"
+                onClick={e => updateGenderPref(e.target.id)}
               />
               <Form.Check
                 name="genderSelect"
@@ -92,8 +87,8 @@ function Customizer(props) {
                 inline
                 label="All Boys"
                 type="radio"
-                id="boys"
-                onClick={e => updateGenderPreference(e.target.id)}
+                id="male"
+                onClick={e => updateGenderPref([e.target.id])}
               />
             </Form.Group>
           </Col>
@@ -113,7 +108,7 @@ function Customizer(props) {
         </Form.Row>
         <Form.Row>
           <Button variant="info" type="submit">
-            Submit
+            Get New Band
           </Button>
         </Form.Row>
       </Form>
