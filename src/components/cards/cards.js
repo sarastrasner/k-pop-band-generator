@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert';
 import CardDeck from 'react-bootstrap/CardDeck';
 import { connect } from 'react-redux';
@@ -92,19 +91,14 @@ function Cards(props) {
                       <Card.Img variant="top" src={placeholder} />
                     )}
                     <Card.Body>
-                      <Card.Title className="title">{person.name}</Card.Title>
+                      <Card.Title className="title">
+                        <strong>{person.name}</strong> | {person.group}
+                      </Card.Title>
                       <Card.Subtitle className="mb-2 text-muted">
-                        {person.group}
+                        {person.specialty.join(' and ')}
                       </Card.Subtitle>
                       <Card.Text>{person.bio}</Card.Text>
                     </Card.Body>
-                    <ListGroup variant="flush">
-                      {person.specialty.map((item, idx) => {
-                        return (
-                          <ListGroup.Item key={idx}>{item}</ListGroup.Item>
-                        );
-                      })}
-                    </ListGroup>
                     <Card.Footer>
                       <small className="text-muted">
                         Learn more about{' '}
