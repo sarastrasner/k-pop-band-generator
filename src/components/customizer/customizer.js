@@ -7,6 +7,7 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import './customizer.scss';
 import { getNewData, updateShowCustomizer } from '../../store/store';
 const mapDispatchToProps = { getNewData, updateShowCustomizer };
+var _ = require('lodash');
 
 function Customizer(props) {
   const [selectedBands, updateSelectedBands] = useState([]);
@@ -74,15 +75,12 @@ function Customizer(props) {
 
   const handleCheck = e => {
     e.preventDefault();
-    if (!tempArray.includes(e.target.id)) {
-      tempArray.push(e.target.id);
-    } else if (tempArray.includes(e.target.id)) {
-      for (let i = 0; i < tempArray.length; i++) {
-        if (tempArray[i] === e.target.id) {
-          tempArray.splice(i, 1);
-        }
-      }
+    if (_.includes(tempArray, e.target.id, 0)) {
+      _.pull(tempArray, e.target.id);
+    } else {
+      tempArray.unshift(e.target.id);
     }
+    console.log(tempArray);
     updateSelectedBands(tempArray);
     //updateSelectedBands([...selectedBands, e.target.id]);
   };

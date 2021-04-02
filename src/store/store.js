@@ -32,6 +32,7 @@ const query = (limit, gender, bandPreference) => gql`
       photo
       specialty
       bio
+      link
     }
   }
   `;
