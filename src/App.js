@@ -6,11 +6,13 @@ import logo from './assets/logo.png';
 function App() {
   return (
     <>
-      <div id="logoBox">
-        <img id="logo" src={logo} alt="logo"></img>
+      <div className="content-container">
+        <div id="logoBox">
+          <img id="logo" src={logo} alt="logo"></img>
+        </div>
+        <Cards />
       </div>
-      <Cards />
-      <Footer />
+      <Footer className="footer--pin" />
     </>
   );
 }
