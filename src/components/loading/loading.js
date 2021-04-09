@@ -1,6 +1,20 @@
+import { useState, useEffect } from 'react';
+
 function Loading() {
-  return (
-    <div id='loading'>
+  const [showMeme, setShowMeme] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowMeme(true);
+    }, 5000);
+  }, [showMeme]);
+
+  return !showMeme ? (
+    <div id="loading">
+      <div className="loading-ellipsis">Loading</div>
+    </div>
+  ) : (
+    <div id="loading">
       <div className="loading-ellipsis">Loading fresh K-Pop goodness</div>
       <p>In the meantime, enjoy this meme!</p>
       <div id="wiki-link">
