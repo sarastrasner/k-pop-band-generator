@@ -38,12 +38,6 @@ const query = (limit, gender, bandPreference) => gql`
   `;
 
 export const getNewData = (limit, gender, bandPreference) => dispatch => {
-  console.log(
-    'This is being passed to getData: ',
-    limit,
-    gender,
-    bandPreference
-  );
   request(
     'https://k-pop-api-v2.herokuapp.com/graphql',
     query(limit, gender, bandPreference)
@@ -85,7 +79,6 @@ export const updateQTYPreference = preferredQTY => {
 };
 
 export const updateGenderPreference = preference => {
-  console.log(`You are updating gender to: ${preference}`);
   return { type: 'CUSTOM-GENDER-PREFERENCE', payload: preference };
 };
 
@@ -105,7 +98,6 @@ export default (state = initialState, action) => {
     case 'CUSTOM-QTY-PREFERENCE':
       return { ...state, preferredQTY: payload };
       case 'NAME':
-        console.log('name payload: ',payload)
         return { ...state, bandName: payload };
     default:
       return state;

@@ -37,28 +37,18 @@ function Customizer(props) {
     );
   };
 
-  useEffect(() => {
-    if (genderPref[0] === 'female') {
-      console.log('only girls!');
-    }
-    if (genderPref[0] === 'male') console.log('only boys!');
-  }, [genderPref]);
-
   const handleSubmit = e => {
     e.preventDefault();
     e.target.reset();
     if (selectedBands.length > 0) {
-      console.log('Selected bands: ', selectedBands);
       bandPreference = selectedBands;
       updateSelectedBands([]);
     }
     if (genderPref.length > 0) {
-      console.log('Gender pref: ', genderPref);
       genderPreference = genderPref;
       updateGenderPref([]);
     }
     if (bandQTY) {
-      console.log('Band QTY: ', bandQTY);
       preferredQTY = bandQTY;
       setBandQTY('');
       setValue(5);
@@ -80,7 +70,6 @@ function Customizer(props) {
     } else {
       tempArray.unshift(e.target.id);
     }
-    console.log(tempArray);
     updateSelectedBands(tempArray);
     //updateSelectedBands([...selectedBands, e.target.id]);
   };
